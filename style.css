@@ -1,33 +1,45 @@
 body {
   font-family: Arial, sans-serif;
   text-align: center;
-  background-color: #f0f0f0;
-  margin: 0;
+  background: #f0f0f0;
   padding: 10px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
 }
-h1 {
+h1, p {
   color: #333;
 }
-.product {
+.category {
   border: 1px solid #ccc;
-  padding: 10px;
-  margin: 10px auto;
-  background-color: white;
-  border-radius: 5px;
-  max-width: 300px;
+  padding: 15px;
+  margin: 15px auto;
+  background: white;
+  border-radius: 8px;
+  max-width: 320px;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 img {
-  max-width: 100px;
-  border-radius: 5px;
+  max-width: 150px;
+  border-radius: 8px;
+  display: block !important;
+  margin: 0 auto 10px;
+  border: 2px solid red; /* Отладочная рамка */
 }
 button {
-  background-color: #0088cc;
+  background: #0088cc;
   color: white;
-  padding: 10px;
+  padding: 12px;
   border: none;
   border-radius: 5px;
+  width: 100%;
+  margin-top: 10px;
   cursor: pointer;
 }
 button:hover {
-  background-color: #005f99;
+  background: #005f99;
 }
