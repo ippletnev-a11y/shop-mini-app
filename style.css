@@ -25,18 +25,19 @@ body {
 .title-box {
   width: 100%; /* растягиваем рамку на всю ширину */
   max-width: 500px; /* ограничение на больших экранах */
-  padding: 14px 20px;
-  border-radius: 16px;
+  padding: 10px 20px;
+  border-radius: 5px;
   font-size: 20px;
   font-weight: bold;
   text-align: center;
-  color: #fff;
+  color: #111010;
   background: linear-gradient(90deg, #ffcc00, #ff9900);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 /* Сетка карточек */
 .gallery {
+  margin-top: 100px;
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 колонки */
   gap: 8px;
@@ -52,6 +53,7 @@ button {
 
 /* Карточка категории */
 .category {
+  border: 1px solid #ff9900;
   background-color: var(--tg-theme-button-color, #f9f9f9);
   color: var(--tg-theme-text-color, #222);
   border-radius: 12px;
