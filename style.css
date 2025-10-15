@@ -9,37 +9,27 @@ body {
   align-items: center;
   margin: 0;
 }
-h1, p {
-  color: #333;
+img {
+  max-width: 130px;
+  display: block !important;
+  margin: 0 auto 10px;
+  
 }
-.category {
+button {
   border: 1px solid #ccc;
+  box-shadow: 0px 0px 3px;
   padding: 15px;
-  margin: 15px auto;
+  margin: 3px auto;
   background: white;
-  border-radius: 8px;
-  max-width: 320px;
+  border-radius: 5px;
+  max-width: 250px;
   width: 100%;
   box-sizing: border-box;
   text-align: center;
 }
-img {
-  max-width: 150px;
-  border-radius: 8px;
-  display: block !important;
-  margin: 0 auto 10px;
-  border: 2px solid red; /* Отладочная рамка */
-}
-button {
-  background: #0088cc;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 5px;
-  width: 100%;
-  margin-top: 10px;
-  cursor: pointer;
-}
+
 button:hover {
-  background: #005f99;
+  background: #f2f2f2;
+  transform: translatey(-2);
 }
+

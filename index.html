@@ -1,30 +1,36 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Каталог товаров</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="/style.css">
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "viewport" content="width=device-width, initial-scale=1.0">
+        <title> Витрина MerryBee</title>
+        <link rel="stylesheet" href="/style.css">
+        <script src="script.js" defer></script>
+    </head>
 <body>
-  <h1>Каталог товаров</h1>
-  <p>Выберите категорию товаров</p>
-  <div class="category">
-    <img src="/home/pcrom/Рабочий стол/shop-mini-app/img" alt="Формовые свечи">
+    <button id="goButton" class="button">
+    <div class="category">
+    <img src="img/bee.png" alt="Формовые свечи">
     <h3>Формовые свечи</h3>
-    <button onclick="window.Telegram.WebApp.showAlert('Открыта категория: Формовые свечи')">Посмотреть</button>
   </div>
+  </button>
+  <button>
   <div class="category">
-    <img src="https://disk.yandex.ru/i/xOgLWg0DZV7xWw" alt="Изделия из гипса">
+    <img src="img/bee.png" alt="Изделия из гипса">
     <h3>Изделия из гипса</h3>
-    <button onclick="window.Telegram.WebApp.showAlert('Открыта категория: Изделия из гипса')">Посмотреть</button>
+    </div>
+  </button>
+  <button>
+     <div class="category">
+    <img src="img/bee.png" alt="Арома свечи">
+    <h3>Аромаматические свечи</h3>
   </div>
-  <div class="category">
-    <img src="https://disk.yandex.ru/i/xOgLWg0DZV7xWw" alt="Арома свечи">
-    <h3>Арома свечи</h3>
-    <button onclick="window.Telegram.WebApp.showAlert('Открыта категория: Арома свечи')">Посмотреть</button>
+  </button>
+  <button>
+     <div class="category">
+    <img src="img/bee.png" alt="Арома свечи">
+    <h3>Кашпо</h3>
   </div>
-  <script src="/script.js"></script>
-</body>
-</htm
+  </button>
+</body>    
+</html>
