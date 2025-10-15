@@ -1,13 +1,17 @@
+/* Сброс стандартных стилей */
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
+
 body {
-  margin: 0;
-  padding: 12px;
-  background-color: var(--tg-theme-bg-color, #ffffff);
   font-family: system-ui, sans-serif;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* Верхняя панель */
@@ -37,20 +41,29 @@ body {
 /* Сетка карточек */
 .gallery {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr); /* 2 колонки */
   gap: 8px;
+  width: 100%;
 }
 
+/* Сброс стилей кнопок внутри сетки */
 button {
   all: unset;
   cursor: pointer;
+  width: 100%; /* чтобы кнопка занимала всю ячейку */
 }
 
+/* Карточка категории */
 .category {
   background-color: var(--tg-theme-button-color, #f9f9f9);
   color: var(--tg-theme-text-color, #222);
   border-radius: 12px;
   padding: 16px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px; /* фиксированная минимальная высота */
   text-align: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   transition: transform 0.2s, box-shadow 0.2s;
@@ -74,9 +87,9 @@ button {
   box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
-/* Адаптив */
+/* Адаптив для узких экранов (например, телефоны) */
 @media (max-width: 400px) {
   .gallery {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; /* 1 карточка в ряд */
   }
 }
