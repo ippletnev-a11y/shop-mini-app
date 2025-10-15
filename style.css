@@ -37,7 +37,7 @@ body {
 
 /* Сетка карточек */
 .gallery {
-  margin-top: 100px;
+  margin-top: 30px;
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2 колонки */
   gap: 8px;
