@@ -14,28 +14,25 @@ body {
   min-height: 100vh;
 }
 
-/* Верхняя панель */
+/* Верхняя панель с названием */
 .top-bar {
   width: 100%;
-  margin-bottom: 12px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
+  margin-bottom: 12px;
 }
 
-#homeButton {
-  all: unset;
-  cursor: pointer;
-  background-color: var(--tg-theme-button-color, #f0f0f0);
-  color: var(--tg-theme-text-color, #222);
-  padding: 8px 14px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  font-size: 14px;
-  transition: transform 0.2s;
-}
-
-#homeButton:active {
-  transform: scale(0.97);
+.title-box {
+  width: 100%; /* растягиваем рамку на всю ширину */
+  max-width: 500px; /* ограничение на больших экранах */
+  padding: 14px 20px;
+  border-radius: 16px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(90deg, #ffcc00, #ff9900);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 /* Сетка карточек */
