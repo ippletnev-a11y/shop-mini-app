@@ -1,20 +1,51 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 body {
   margin: 0;
   padding: 12px;
   background-color: var(--tg-theme-bg-color, #ffffff);
   font-family: system-ui, sans-serif;
+}
+
+/* Верхняя панель */
+.top-bar {
+  width: 100%;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+#homeButton {
+  all: unset;
+  cursor: pointer;
+  background-color: var(--tg-theme-button-color, #f0f0f0);
+  color: var(--tg-theme-text-color, #222);
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+
+#homeButton:active {
+  transform: scale(0.97);
+}
+
+/* Сетка карточек */
+.gallery {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* две кнопки в ряд */
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 
-/* Сброс дефолтных стилей кнопок */
 button {
   all: unset;
   cursor: pointer;
 }
 
-/* Карточка категории */
 .category {
   background-color: var(--tg-theme-button-color, #f9f9f9);
   color: var(--tg-theme-text-color, #222);
@@ -38,15 +69,14 @@ button {
   color: var(--tg-theme-text-color, #222);
 }
 
-/* Эффект при нажатии */
 .category:active {
   transform: scale(0.97);
   box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 
-/* Адаптив: на узких экранах — по одной карточке */
+/* Адаптив */
 @media (max-width: 400px) {
-  body {
+  .gallery {
     grid-template-columns: 1fr;
   }
 }
