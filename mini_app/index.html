@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Mini Shop — Свечи</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:16px; background:#f7f7f8; color:#111; }
+    h1 { font-size:20px; margin-bottom:8px; }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; }
+    .card { background:#fff; border-radius:10px; padding:12px; box-shadow:0 6px 14px rgba(16,24,40,0.06); }
+    .product-title { font-weight:600; margin:0 0 6px 0; }
+    .price { color:#0b5; font-weight:700; margin-bottom:8px; }
+    .controls { display:flex; gap:8px; align-items:center; margin-top:8px; }
+    input[type="number"], input[type="text"] { padding:6px 8px; border-radius:6px; border:1px solid #e0e0e0; width:100%; box-sizing:border-box; }
+    .buy-btn { padding:8px 12px; border-radius:8px; border:none; cursor:pointer; background:#0066cc; color:white; font-weight:600; }
+    .small { font-size:13px; color:#666; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .notice { font-size:13px; color:#444; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div>
+      <h1>Магазин свечей — Mini App</h1>
+      <div class="notice">Выберите товар и нажмите «Купить» — данные отправятся боту.</div>
+    </div>
+    <div class="small">ID (из Telegram): <span id="tg-user-id">—</span></div>
+  </div>
+
+  <div class="grid" id="products">
+    <!-- Товар 1 -->
+    <div class="card" data-product='{"name":"Свеча Shield of Egypt","price":600,"sku":"SHE-01"}'>
+      <div class="product-title">Свеча «Shield of Egypt»</div>
+      <div class="small">Аромат: ладановый · Материал: парафин</div>
+      <div class="price">600 ₽</div>
+
+      <label class="small">Кол-во</label>
+      <input type="number" class="qty" value="1" min="1">
+
+      <div style="height:8px"></div>
+      <label class="small">Комментарий (опционально)</label>
+      <input type="text" class="comment" placeholder="Например: в подарок">
+
+      <div class="controls">
+        <button class="buy-btn">Купить</button>
+      </div>
+    </div>
+
+    <!-- Товар 2 -->
+    <div class="card" data-product='{"name":"Свеча Lotus Glow","price":450,"sku":"LG-02"}'>
+      <div class="product-title">Свеча «Lotus Glow»</div>
+      <div class="small">Аромат: лотос · Материал: соевый воск</div>
+      <div class="price">450 ₽</div>
+
+      <label class="small">Кол-во</label>
+      <input type="number" class="qty" value="1" min="1">
+
+      <div style="height:8px"></div>
+      <label class="small">Комментарий (опционально)</label>
+      <input type="text" class="comment" placeholder="Например: 2 штуки в подарок">
+
+      <div class="controls">
+        <button class="buy-btn">Купить</button>
+      </div>
+    </div>
+
+    <!-- Товар 3 -->
+    <div class="card" data-product='{"name":"Свеча Amber Night","price":700,"sku":"AN-03"}'>
+      <div class="product-title">Свеча «Amber Night»</div>
+      <div class="small">Аромат: амбра · Материал: смесь восков</div>
+      <div class="price">700 ₽</div>
+
+      <label class="small">Кол-во</label>
+      <input type="number" class="qty" value="1" min="1">
+
+      <div style="height:8px"></div>
+      <label class="small">Комментарий (опционально)</label>
+      <input type="text" class="comment" placeholder="Например: упаковка в подарок">
+
+      <div class="controls">
+        <button class="buy-btn">Купить</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Безопасная проверка на запуск внутри Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    const userIdDisplay = document.getElementById('tg-user-id');
+
+    // Если WebApp не найден — приложение можно тестировать локально (tg будет undefined)
+    if (!tg) {
+      console.warn('Telegram WebApp API not found. Testing mode ON.');
+    } else {
+      // initDataUnsafe содержит поле user если оно доступно
+      try {
+        const uid = tg.initDataUnsafe?.user?.id ?? '—';
+        userIdDisplay.textContent = uid;
+      } catch (e) {
+        userIdDisplay.textContent = '—';
+      }
+    }
+
+    // Обработчик кликов по кнопке "Купить" (делегирование)
+    document.getElementById('products').addEventListener('click', (ev) => {
+      const btn = ev.target.closest('.buy-btn');
+      if (!btn) return;
+
+      const card = btn.closest('.card');
+      if (!card) return;
+
+      // Парсим данные товара, которые хранятся в data-product
+      let productInfo;
+      try {
+        productInfo = JSON.parse(card.getAttribute('data-product'));
+      } catch (e) {
+        alert('Ошибка данных товара');
+        return;
+      }
+
+      // Получаем поля управления внутри карточки
+      const qtyEl = card.querySelector('.qty');
+      const commentEl = card.querySelector('.comment');
+
+      const qty = Math.max(1, parseInt(qtyEl.value || '1', 10));
+      const comment = (commentEl.value || '').trim();
+
+      // Собираем данные заказа
+      const orderData = {
+        action: 'buy',
+        product: productInfo.name,
+        sku: productInfo.sku || null,
+        price: productInfo.price || null,
+        quantity: qty,
+        comment: comment,
+        // данные пользователя из Telegram (если доступны)
+        user_id: tg?.initDataUnsafe?.user?.id ?? null,
+        username: tg?.initDataUnsafe?.user?.username ?? null,
+        timestamp: new Date().toISOString()
+      };
+
+      const jsonStr = JSON.stringify(orderData);
+
+      // Отправляем данные боту
+      if (tg && typeof tg.sendData === 'function') {
+        try {
+          tg.sendData(jsonStr);
+          // Можно закрыть мини-приложение, если хочется: tg.close();
+          // Показать confirmation через WebApp API (если требуется) -- но не обяз.
+        } catch (e) {
+          console.error(e);
+          alert('Не удалось отправить данные. Попробуйте ещё раз.');
+        }
+      } else {
+        // В режиме теста просто показываем JSON для проверки
+        alert('Тестовый режим: данные, которые отправились бы боту:\n\n' + jsonStr);
+      }
+
+      // Опционально: дать визуальную обратную связь
+      btn.textContent = 'Отправлено ✓';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = 'Купить';
+        btn.disabled = false;
+      }, 1800);
+    });
+  </script>
+</body>
+</html>
