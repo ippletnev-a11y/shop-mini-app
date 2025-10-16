@@ -5,10 +5,14 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # -----------------------------
-BOT_TOKEN = ""
-ADMIN_ID = 1986051958  # ваш Telegram ID
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+ADMIN_ID = int(os.getenv("ADMIN_ID"))
 # -----------------------------
 
 logging.basicConfig(level=logging.INFO)
