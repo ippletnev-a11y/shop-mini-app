@@ -35,7 +35,7 @@ async def start(message: types.Message):
     kb = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(
             text="Открыть магазин",
-            web_app=WebAppInfo(url="https://ВАША_ССЫЛКА_НА_MINI_APP/index.html")
+            web_app=WebAppInfo(url="https://shop-mini-app-eight.vercel.app")
         )]
     ])
     await message.answer(
