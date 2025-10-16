@@ -7,7 +7,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
 
 # -----------------------------
-BOT_TOKEN = "8248066160:AAFFs98RKdSLYoCH9-RtbZi-QD0oERf9tcM"
+BOT_TOKEN = ""
 ADMIN_ID = 1986051958  # ваш Telegram ID
 # -----------------------------
 
