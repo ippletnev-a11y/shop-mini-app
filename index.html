@@ -6,27 +6,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        button { padding: 15px; margin: 10px; font-size: 16px; }
-        #status { margin: 20px 0; padding: 15px; border-radius: 10px; }
-        .success { background: #d4edda; color: #155724; }
-        .error { background: #f8d7da; color: #721c24; }
-        .info { background: #d1ecf1; color: #0c5460; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .product-card {
+            background: white;
+            color: #333;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #2481cc;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: #1a6fb3;
+            transform: translateY(-2px);
+        }
+        #status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            text-align: left;
+        }
     </style>
 </head>
 <body>
-    <h1>🛍️ Тестовый магазин</h1>
+    <h1>🛍️ Магазин одежды</h1>
     
     <div class="product-card">
         <h2>👕 Крутая футболка</h2>
         <p><strong>Цена: 1500 руб.</strong></p>
         <button onclick="sendOrder()">📦 Купить сейчас</button>
+        <button onclick="sendAsMessage()">💬 Отправить как сообщение</button>
     </div>
 
-    <button onclick="sendDirectOrder()">🎯 Тест: Прямая отправка</button>
-    <button onclick="showDebug()">🐛 Показать Debug</button>
-
-    <div id="status" class="info"></div>
+    <div id="status">
+        <strong>Статус:</strong> Готов к работе
+    </div>
 
     <script>
         let tg = window.Telegram.WebApp;
@@ -36,18 +69,10 @@
         tg.ready();
         
         const user = tg.initDataUnsafe?.user;
-        showDebug(); // Показать debug при загрузке
 
-        function showDebug() {
-            const status = document.getElementById('status');
-            status.className = 'info';
-            status.innerHTML = `
-                <strong>Debug информация:</strong><br>
-                - User: ${user ? user.first_name + ' (ID: ' + user.id + ')' : 'неизвестен'}<br>
-                - WebApp готов: ${tg.isReady}<br>
-                - Platform: ${tg.platform}<br>
-                - Version: ${tg.version}
-            `;
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = `<strong>Статус:</strong> ${message}`;
+            console.log("Status:", message);
         }
 
         function sendOrder() {
@@ -64,55 +89,54 @@
                 source: "mini_app"
             };
 
-            updateStatus("📤 Отправляю данные...", "info");
+            updateStatus("📤 Отправляю данные через WebApp...");
             console.log("Отправляемые данные:", orderData);
             
             try {
-                // Основной способ отправки
                 tg.sendData(JSON.stringify(orderData));
-                updateStatus("✅ Данные отправлены через tg.sendData()", "success");
+                updateStatus("✅ Данные отправлены через WebApp!");
                 
-                // Закрываем Mini App через 3 секунды
                 setTimeout(() => {
                     tg.close();
-                }, 3000);
+                }, 2000);
                 
             } catch (error) {
-                updateStatus(`❌ Ошибка: ${error}`, "error");
+                updateStatus(`❌ Ошибка WebApp: ${error}`);
             }
         }
 
-        function sendDirectOrder() {
+        function sendAsMessage() {
             const orderData = {
                 action: "buy",
-                product: "Прямой заказ",
-                price: 2000,
-                quantity: 2,
+                product: "Крутая футболка (через сообщение)",
+                price: 1500,
+                quantity: 1,
                 user_id: user?.id,
                 username: user?.username,
-                comment: "Прямой тестовый заказ",
+                first_name: user?.first_name,
+                comment: "Заказ отправлен как сообщение",
                 timestamp: new Date().toISOString(),
-                test: "direct"
+                source: "message"
             };
 
-            updateStatus("🎯 Прямая отправка...", "info");
+            updateStatus("💬 Отправляю как текстовое сообщение...");
             
-            // Альтернативный способ - имитируем отправку сообщения
-            const dataString = JSON.stringify(orderData);
+            // Открываем чат с ботом с заранее подготовленным сообщением
+            const messageText = JSON.stringify(orderData);
+            const botUsername = "MYCookShoBot"; // Замените на username вашего бота
+            const url = `https://t.me/${botUsername}?start=order_${btoa(messageText).replace(/=/g, '')}`;
             
-            try {
-                tg.sendData(dataString);
-                updateStatus("✅ Прямые данные отправлены!", "success");
-            } catch (error) {
-                updateStatus(`❌ Ошибка прямой отправки: ${error}`, "error");
-            }
+            window.open(url, '_blank');
+            updateStatus("✅ Открываю чат с ботом...");
         }
 
-        function updateStatus(message, type) {
-            const status = document.getElementById('status');
-            status.className = type;
-            status.innerHTML = message;
-            console.log("Status:", message);
+        // Показываем информацию о пользователе
+        if (user) {
+            document.body.insertAdjacentHTML('afterbegin', 
+                `<div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; margin-bottom: 20px;">
+                    👋 Привет, ${user.first_name}! (ID: ${user.id})
+                </div>`
+            );
         }
     </script>
 </body>
