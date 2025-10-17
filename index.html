@@ -2,66 +2,40 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mini Shop — Свечи</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin:16px; background:#f7f7f8; }
-    h1 { font-size:20px; }
-    .product { background:#fff; border-radius:10px; padding:12px; margin-bottom:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); }
-    .buy-btn { padding:8px 12px; background:#0066cc; color:#fff; border:none; border-radius:6px; cursor:pointer; }
-    input[type="number"], input[type="text"] { width:100%; padding:6px; margin-top:4px; margin-bottom:8px; border-radius:6px; border:1px solid #ccc; }
-  </style>
+  <title>Магазин свечей</title>
 </head>
 <body>
-<h1>Магазин све</h1>
+<h2>Свеча "Shield of Egypt"</h2>
+<p>Цена: 600 ₽</p>
 
-<div class="product" data-name="Свеча Shield of Egypt" data-price="600">
-  <b>Свеча Shield of Egypt</b> — 600 ₽<br>
-  Количество: <input type="number" class="qty" value="1" min="1"><br>
-  Комментарий: <input type="text" class="comment" placeholder="Опционально"><br>
-  <button class="buy-btn">Купить</button>
-</div>
+<label>Количество:</label>
+<input type="number" id="qty" value="1" min="1">
 
-<div class="product" data-name="Свеча Lotus Glow" data-price="450">
-  <b>Свеча Lotus Glow</b> — 450 ₽<br>
-  Количество: <input type="number" class="qty" value="1" min="1"><br>
-  Комментарий: <input type="text" class="comment" placeholder="Опционально"><br>
-  <button class="buy-btn">Купить</button>
-</div>
+<br><br>
+<label>Комментарий:</label>
+<input type="text" id="comment" placeholder="Например: в подарок">
 
-<div class="product" data-name="Свеча Amber Night" data-price="700">
-  <b>Свеча Amber Night</b> — 700 ₽<br>
-  Количество: <input type="number" class="qty" value="1" min="1"><br>
-  Комментарий: <input type="text" class="comment" placeholder="Опционально"><br>
-  <button class="buy-btn">Купить</button>
-</div>
+<br><br>
+<button id="buy-btn">Купить</button>
 
 <script>
-const tg = window.Telegram?.WebApp;
+  const tg = window.Telegram.WebApp;
 
-document.querySelectorAll('.buy-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const card = btn.closest('.product');
+  const buyBtn = document.getElementById('buy-btn');
+  const qtyInput = document.getElementById('qty');
+  const commentInput = document.getElementById('comment');
+
+  buyBtn.addEventListener('click', () => {
     const orderData = {
       action: 'buy',
-      product: card.dataset.name,
-      price: parseInt(card.dataset.price),
-      quantity: parseInt(card.querySelector('.qty').value),
-      comment: card.querySelector('.comment').value || '',
-      user_id: tg?.initDataUnsafe?.user?.id ?? null,
-      username: tg?.initDataUnsafe?.user?.username ?? null
+      product: 'Свеча Shield of Egypt',
+      quantity: qtyInput.value,
+      comment: commentInput.value,
+      user_id: tg.initDataUnsafe.user?.id,
+      username: tg.initDataUnsafe.user?.username
     };
-
-    if (tg && tg.sendData) {
-      tg.sendData(JSON.stringify(orderData));
-      btn.textContent = "Отправлено ✓";
-      btn.disabled = true;
-      setTimeout(() => { btn.textContent = "Купить"; btn.disabled = false; }, 1500);
-    } else {
-      alert("Тестовый режим:\n" + JSON.stringify(orderData, null, 2));
-    }
+    tg.sendData(JSON.stringify(orderData));
   });
-});
 </script>
 </body>
 </html>
