@@ -1,36 +1,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Test Mini App</title>
+    <title>Магазин в Telegram</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h1>Тестовая Mini App</h1>
-    <button onclick="sendTestData()">Отправить тестовые данные</button>
+    <h1>Тестовый магазин</h1>
+    <p>Товар: Крутая футболка - 1500 руб.</p>
     
+    <button onclick="sendOrder()">📦 Тест: отправить заказ</button>
+    <button onclick="debugInfo()">🐛 Debug информация</button>
+
+    <div id="status" style="margin-top: 20px; padding: 10px; background: #f0f0f0;"></div>
+
     <script>
         let tg = window.Telegram.WebApp;
-        tg.expand();
         
-        function sendTestData() {
-            const testData = {
+        // Инициализация
+        tg.expand();
+        tg.ready();
+        
+        // Показываем информацию о пользователе
+        const user = tg.initDataUnsafe?.user;
+        if (user) {
+            document.getElementById('status').innerHTML = 
+                `👋 Привет, ${user.first_name}! ID: ${user.id}`;
+        }
+
+        function debugInfo() {
+            const status = document.getElementById('status');
+            status.innerHTML = `
+                <strong>Debug информация:</strong><br>
+                - Telegram WebApp инициализирован: ${!!tg}<br>
+                - User: ${user ? user.first_name + ' (ID: ' + user.id + ')' : 'неизвестен'}<br>
+                - Bot доступен: ${!!tg.sendData}<br>
+                - initData: ${JSON.stringify(tg.initDataUnsafe, null, 2)}
+            `;
+        }
+
+        function sendOrder() {
+            const orderData = {
                 action: "buy",
-                product: "Тестовый товар",
-                price: 1000,
+                product: "Крутая футболка",
+                price: 1500,
                 quantity: 1,
-                user_id: 123456789,
-                username: "test_user",
-                comment: "Тестовый заказ",
-                timestamp: new Date().toISOString()
+                user_id: user?.id || "unknown",
+                username: user?.username || "no_username",
+                first_name: user?.first_name || "unknown",
+                comment: "Тестовый заказ из Mini App",
+                timestamp: new Date().toISOString(),
+                source: "mini_app"
             };
+
+            document.getElementById('status').innerHTML = 
+                "📤 Отправляю данные: " + JSON.stringify(orderData, null, 2);
+
+            console.log("Отправляемые данные:", orderData);
             
-            console.log("Отправляемые данные:", testData);
-            tg.sendData(JSON.stringify(testData));
-            alert("Данные отправлены! Проверьте консоль бота.");
+            // Отправляем данные боту
+            try {
+                tg.sendData(JSON.stringify(orderData));
+                document.getElementById('status').innerHTML += 
+                    "<br><span style='color: green;'>✅ Данные отправлены успешно!</span>";
+                
+                // Закрываем Mini App через 2 секунды
+                setTimeout(() => {
+                    tg.close();
+                }, 2000);
+                
+            } catch (error) {
+                document.getElementById('status').innerHTML += 
+                    `<br><span style='color: red;'>❌ Ошибка: ${error}</span>`;
+            }
         }
         
-        // Автоматически отправляем тестовые данные при загрузке
-        // setTimeout(sendTestData, 1000);
+        // Авто-тест при загрузке (можно включить для отладки)
+        // setTimeout(sendOrder, 1000);
     </script>
 </body>
 </html>
