@@ -1,5 +1,7 @@
 # .env с токенами
 .env
+bot.py
+requirements.txt
 
 # Виртуальное окружение
 .venv/
