@@ -1,122 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Магазин в Telegram</title>
+    <title>Test Mini App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .product-card {
-            background: white;
-            color: #333;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        button {
-            background: #2481cc;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 10px;
-            transition: background 0.3s;
-        }
-        button:hover {
-            background: #1a6fb3;
-        }
-    </style>
 </head>
 <body>
-    <h1>🛍️ Магазин одежды</h1>
+    <h1>Тестовая Mini App</h1>
+    <button onclick="sendTestData()">Отправить тестовые данные</button>
     
-    <div class="product-card">
-        <h2>👕 Крутая футболка</h2>
-        <p><strong>Цена: 1500 руб.</strong></p>
-        <button id="buy-button">🛒 Купить сейчас</button>
-    </div>
-
     <script>
-        // Инициализация Telegram Web App
         let tg = window.Telegram.WebApp;
-        
-        // Развернуть приложение на весь экран
         tg.expand();
         
-        // Включить кнопку закрытия с подтверждением
-        tg.enableClosingConfirmation();
-        
-        // Получаем информацию о пользователе
-        const user = tg.initDataUnsafe?.user;
-        
-        // Показываем приветствие с именем пользователя
-        if (user) {
-            document.body.insertAdjacentHTML('afterbegin', 
-                `<div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; margin-bottom: 20px;">
-                    👋 Привет, ${user.first_name || 'друг'}! 
-                    ${user.username ? `(@${user.username})` : ''}
-                </div>`
-            );
-        }
-
-        const buyButton = document.getElementById('buy-button');
-
-        buyButton.addEventListener('click', () => {
-            // Собираем данные о заказе с реальной информацией
-            const orderData = {
+        function sendTestData() {
+            const testData = {
                 action: "buy",
-                product: "Крутая футболка",
-                price: 1500,
+                product: "Тестовый товар",
+                price: 1000,
                 quantity: 1,
-                user_id: user?.id || "неизвестен",
-                username: user?.username || "без ника",
-                first_name: user?.first_name || "неизвестно",
-                comment: "Заказ из Mini App",
+                user_id: 123456789,
+                username: "test_user",
+                comment: "Тестовый заказ",
                 timestamp: new Date().toISOString()
             };
-
-            // Показываем подтверждение перед отправкой
-            tg.showPopup({
-                title: 'Подтверждение заказа',
-                message: `Вы уверены, что хотите купить "${orderData.product}" за ${orderData.price} руб.?`,
-                buttons: [
-                    {type: 'default', text: '✅ Да, купить', id: 'confirm'},
-                    {type: 'destructive', text: '❌ Отмена', id: 'cancel'}
-                ]
-            }, (buttonId) => {
-                if (buttonId === 'confirm') {
-                    // Отправляем данные боту
-                    tg.sendData(JSON.stringify(orderData));
-                    
-                    // Показываем уведомление об успехе
-                    tg.showAlert('✅ Заказ отправлен! Спасибо за покупку.');
-                    
-                    // Закрываем Mini App через 2 секунды
-                    setTimeout(() => {
-                        tg.close();
-                    }, 2000);
-                }
-            });
-        });
-
-        // Дополнительно: можно использовать основную кнопку Telegram
-        tg.MainButton.setText("🛒 Оформить заказ");
-        tg.MainButton.show();
-        tg.MainButton.onClick(() => {
-            buyButton.click(); // Вызываем тот же обработчик
-        });
+            
+            console.log("Отправляемые данные:", testData);
+            tg.sendData(JSON.stringify(testData));
+            alert("Данные отправлены! Проверьте консоль бота.");
+        }
+        
+        // Автоматически отправляем тестовые данные при загрузке
+        // setTimeout(sendTestData, 1000);
     </script>
 </body>
 </html>
