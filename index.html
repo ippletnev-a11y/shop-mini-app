@@ -5,15 +5,28 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { padding: 15px; margin: 10px; font-size: 16px; }
+        #status { margin: 20px 0; padding: 15px; border-radius: 10px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
 </head>
 <body>
-    <h1>Тестовый магазин</h1>
-    <p>Товар: Крутая футболка - 1500 руб.</p>
+    <h1>🛍️ Тестовый магазин</h1>
     
-    <button onclick="sendOrder()">📦 Тест: отправить заказ</button>
-    <button onclick="debugInfo()">🐛 Debug информация</button>
+    <div class="product-card">
+        <h2>👕 Крутая футболка</h2>
+        <p><strong>Цена: 1500 руб.</strong></p>
+        <button onclick="sendOrder()">📦 Купить сейчас</button>
+    </div>
 
-    <div id="status" style="margin-top: 20px; padding: 10px; background: #f0f0f0;"></div>
+    <button onclick="sendDirectOrder()">🎯 Тест: Прямая отправка</button>
+    <button onclick="showDebug()">🐛 Показать Debug</button>
+
+    <div id="status" class="info"></div>
 
     <script>
         let tg = window.Telegram.WebApp;
@@ -22,21 +35,18 @@
         tg.expand();
         tg.ready();
         
-        // Показываем информацию о пользователе
         const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById('status').innerHTML = 
-                `👋 Привет, ${user.first_name}! ID: ${user.id}`;
-        }
+        showDebug(); // Показать debug при загрузке
 
-        function debugInfo() {
+        function showDebug() {
             const status = document.getElementById('status');
+            status.className = 'info';
             status.innerHTML = `
                 <strong>Debug информация:</strong><br>
-                - Telegram WebApp инициализирован: ${!!tg}<br>
                 - User: ${user ? user.first_name + ' (ID: ' + user.id + ')' : 'неизвестен'}<br>
-                - Bot доступен: ${!!tg.sendData}<br>
-                - initData: ${JSON.stringify(tg.initDataUnsafe, null, 2)}
+                - WebApp готов: ${tg.isReady}<br>
+                - Platform: ${tg.platform}<br>
+                - Version: ${tg.version}
             `;
         }
 
@@ -46,38 +56,64 @@
                 product: "Крутая футболка",
                 price: 1500,
                 quantity: 1,
-                user_id: user?.id || "unknown",
-                username: user?.username || "no_username",
-                first_name: user?.first_name || "unknown",
-                comment: "Тестовый заказ из Mini App",
+                user_id: user?.id,
+                username: user?.username,
+                first_name: user?.first_name,
+                comment: "Заказ из Mini App",
                 timestamp: new Date().toISOString(),
                 source: "mini_app"
             };
 
-            document.getElementById('status').innerHTML = 
-                "📤 Отправляю данные: " + JSON.stringify(orderData, null, 2);
-
+            updateStatus("📤 Отправляю данные...", "info");
             console.log("Отправляемые данные:", orderData);
             
-            // Отправляем данные боту
             try {
+                // Основной способ отправки
                 tg.sendData(JSON.stringify(orderData));
-                document.getElementById('status').innerHTML += 
-                    "<br><span style='color: green;'>✅ Данные отправлены успешно!</span>";
+                updateStatus("✅ Данные отправлены через tg.sendData()", "success");
                 
-                // Закрываем Mini App через 2 секунды
+                // Закрываем Mini App через 3 секунды
                 setTimeout(() => {
                     tg.close();
-                }, 2000);
+                }, 3000);
                 
             } catch (error) {
-                document.getElementById('status').innerHTML += 
-                    `<br><span style='color: red;'>❌ Ошибка: ${error}</span>`;
+                updateStatus(`❌ Ошибка: ${error}`, "error");
             }
         }
-        
-        // Авто-тест при загрузке (можно включить для отладки)
-        // setTimeout(sendOrder, 1000);
+
+        function sendDirectOrder() {
+            const orderData = {
+                action: "buy",
+                product: "Прямой заказ",
+                price: 2000,
+                quantity: 2,
+                user_id: user?.id,
+                username: user?.username,
+                comment: "Прямой тестовый заказ",
+                timestamp: new Date().toISOString(),
+                test: "direct"
+            };
+
+            updateStatus("🎯 Прямая отправка...", "info");
+            
+            // Альтернативный способ - имитируем отправку сообщения
+            const dataString = JSON.stringify(orderData);
+            
+            try {
+                tg.sendData(dataString);
+                updateStatus("✅ Прямые данные отправлены!", "success");
+            } catch (error) {
+                updateStatus(`❌ Ошибка прямой отправки: ${error}`, "error");
+            }
+        }
+
+        function updateStatus(message, type) {
+            const status = document.getElementById('status');
+            status.className = type;
+            status.innerHTML = message;
+            console.log("Status:", message);
+        }
     </script>
 </body>
 </html>
