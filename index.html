@@ -1,42 +1,39 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Магазин свечей</title>
+    <title>Магазин в Telegram</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-<h2>Свеча "Shield of Egypt"</h2>
-<p>Цена: 600 ₽</p>
+    <h1>Товар: Крутая футболка</h1>
+    <p>Цена: 1500 руб.</p>
+    <button id="buy-button">Купить</button>
 
-<label>Количество:</label>
-<input type="number" id="qty" value="1" min="1">
+    <script>
+        // Инициализация Telegram Web App
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Развернуть приложение на весь экран
+        tg.MainButton.setText("Оформить заказ"); // Текст на основной кнопке (опционально)
 
-<br><br>
-<label>Комментарий:</label>
-<input type="text" id="comment" placeholder="Например: в подарок">
+        const buyButton = document.getElementById('buy-button');
 
-<br><br>
-<button id="buy-btn">Купить</button>
+        buyButton.addEventListener('click', () => {
+            // 1. Собираем данные о заказе
+            const orderData = {
+                product: 'Крутая футболка',
+                price: 1500,
+                quantity: 1,
+                user_id: tg.initDataUnsafe?.user?.id, // Важно: получаем ID пользователя
+                user_name: tg.initDataUnsafe?.user?.first_name // Имя пользователя
+            };
 
-<script>
-  const tg = window.Telegram.WebApp;
+            // 2. Отправляем данные боту
+            // Бот получит их в виде сообщения, которое не будет видно в чате.
+            tg.sendData(JSON.stringify(orderData));
 
-  const buyBtn = document.getElementById('buy-btn');
-  const qtyInput = document.getElementById('qty');
-  const commentInput = document.getElementById('comment');
-
-  buyBtn.addEventListener('click', () => {
-    const orderData = {
-      action: 'buy',
-      product: 'Свеча Shield of Egypt',
-      quantity: qtyInput.value,
-      comment: commentInput.value,
-      user_id: tg.initDataUnsafe.user?.id,
-      username: tg.initDataUnsafe.user?.username
-    };
-    console.log("Отправляем заказ:", orderData);
-    tg.sendData(JSON.stringify(orderData));
-  });
-</script>
+            // 3. Закрываем Mini App (опционально)
+            tg.close();
+        });
+    </script>
 </body>
 </html>
