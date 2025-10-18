@@ -1,169 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Магазин в Telegram</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            padding: 20px;
-            text-align: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .product-card {
-            background: white;
-            color: #333;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 20px 0;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-        }
-        button {
-            background: #2481cc;
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s;
-        }
-        button:hover {
-            background: #1a6fb3;
-            transform: translateY(-2px);
-        }
-        #status {
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.1);
-            text-align: left;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f3f3f3;
+    }
+    button {
+      background-color: #0088cc;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0077b5;
+    }
+  </style>
 </head>
 <body>
-    <h1>🛍️ Магазин одежды</h1>
-    
-    <div class="product-card">
-        <h2>👕 Крутая футболка</h2>
-        <p><strong>Цена: 1500 руб.</strong></p>
-        
-        <button onclick="sendOrderWebApp()">📦 Купить (WebApp)</button>
-        <button onclick="sendOrderDeepLink()">🚀 Купить (Deep Link)</button>
-        <button onclick="sendOrderDirect()">💬 Купить (Прямое сообщение)</button>
-    </div>
+  <button id="sendBtn">Отправить данные</button>
 
-    <div id="status">
-        <strong>Статус:</strong> Готов к работе
-    </div>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand(); // Разворачивает mini app на весь экран
 
-    <script>
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-        
-        const user = tg.initDataUnsafe?.user;
-        const botUsername = "MYCookShoBot"; // Ваш бот
-
-        function updateStatus(message) {
-            document.getElementById('status').innerHTML = `<strong>Статус:</strong> ${message}`;
-            console.log("Status:", message);
-        }
-
-        function sendOrderWebApp() {
-            const orderData = {
-                action: "buy",
-                product: "Крутая футболка",
-                price: 1500,
-                quantity: 1,
-                user_id: user?.id,
-                username: user?.username,
-                first_name: user?.first_name,
-                comment: "Заказ через WebApp",
-                timestamp: new Date().toISOString()
-            };
-
-            updateStatus("📤 Пытаюсь отправить через WebApp...");
-            
-            try {
-                tg.sendData(JSON.stringify(orderData));
-                updateStatus("✅ WebApp данные отправлены (может не дойти)");
-                
-                setTimeout(() => {
-                    tg.close();
-                }, 2000);
-            } catch (error) {
-                updateStatus(`❌ WebApp ошибка: ${error}`);
-            }
-        }
-
-        function sendOrderDeepLink() {
-            const orderData = {
-                action: "buy",
-                product: "Крутая футболка",
-                price: 1500,
-                quantity: 1,
-                user_id: user?.id,
-                username: user?.username,
-                first_name: user?.first_name,
-                comment: "Заказ через Deep Link",
-                timestamp: new Date().toISOString()
-            };
-
-            updateStatus("🚀 Создаю Deep Link...");
-            
-            // Кодируем данные в base64
-            const orderJson = JSON.stringify(orderData);
-            const encoded = btoa(orderJson).replace(/=/g, '');
-            const deepLink = `https://t.me/${botUsername}?start=order_${encoded}`;
-            
-            updateStatus("✅ Открываю чат с ботом...");
-            
-            // Открываем чат с ботом
-            window.open(deepLink, '_blank');
-        }
-
-        function sendOrderDirect() {
-            const orderData = {
-                action: "buy",
-                product: "Крутая футболка",
-                price: 1500,
-                quantity: 1,
-                user_id: user?.id,
-                username: user?.username,
-                first_name: user?.first_name,
-                comment: "Прямой заказ из Mini App",
-                timestamp: new Date().toISOString()
-            };
-
-            updateStatus("💬 Отправляю как прямое сообщение...");
-            
-            // Просто показываем данные - пользователь сам скопирует и отправит
-            const messageText = JSON.stringify(orderData);
-            document.getElementById('status').innerHTML = `
-                <strong>Скопируйте и отправьте боту:</strong><br>
-                <textarea style="width: 100%; height: 80px; margin: 10px 0; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">${messageText}</textarea>
-                <br>📋 Нажмите чтобы скопировать, затем вставьте в чат с ботом
-            `;
-        }
-
-        // Показываем пользователя
-        if (user) {
-            document.body.insertAdjacentHTML('afterbegin', 
-                `<div style="background: rgba(255,255,255,0.2); padding: 10px; border-radius: 10px; margin-bottom: 20px;">
-                    👋 Привет, ${user.first_name}! (ID: ${user.id})
-                </div>`
-            );
-        }
-
-        updateStatus("✅ Mini App загружена. Выберите способ отправки заказа");
-    </script>
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      // Отправляем сообщение боту
+      tg.sendData("Данные отправлены");
+    });
+  </script>
 </body>
 </html>
