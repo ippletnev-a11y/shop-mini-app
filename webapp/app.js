@@ -1,4 +1,4 @@
-fetch("https://abc1234.ngrok.io/data", {
+fetch("https://tidy-hoops-read.loca.lt", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"

@@ -6,7 +6,7 @@ import asyncio
 import uvicorn
 
 # === Конфигурация ===
-TOKEN = "ТОКЕН_ТВОЕГО_БОТА"
+TOKEN = "8248066160:AAESuGzlQ9tVe7sWSlMwypU4xYZh1CAZ4Po"
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 
@@ -20,7 +20,7 @@ async def receive_data(request: Request):
     print("📩 Получен JSON:", data)
 
     # Например, отправим данные тебе в Telegram
-    chat_id = ТВОЙ_CHAT_ID  # Подставь свой chat_id
+    chat_id = 1986051958  # Подставь свой chat_id
     text = f"📦 Получен заказ из Mini App:\n\n{json.dumps(data, indent=2, ensure_ascii=False)}"
     await bot.send_message(chat_id, text)
 
