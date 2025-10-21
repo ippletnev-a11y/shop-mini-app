@@ -8,6 +8,7 @@ fetch("https://tidy-hoops-read.loca.lt", {
     product: "Candle Shield of Egypt",
     quantity: 2
   })
+  
 })
   .then(res => res.json())
   .then(data => console.log("Ответ:", data))
