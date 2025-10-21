@@ -1,0 +1,3 @@
+# В папке bot/.gitignore
+*
+!.gitignore
