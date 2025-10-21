@@ -4,7 +4,7 @@ export default function App() {
   const [status, setStatus] = useState("Нажми кнопку, чтобы отправить JSON");
 
   // ⚙️ Твой публичный URL из ngrok
-  const API_URL = "https://loud-paws-count.loca.lt"; // ← сюда вставь свой адресa
+  const API_URL = "https://abc1234.ngrok.io/data"; // ← сюда вставь свой адрес
 
   const handleSend = async () => {
     setStatus("⏳ Отправка данных...");
