@@ -1,12 +1,17 @@
+import os
 import json
 from fastapi import FastAPI, Request
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
 import asyncio
 import uvicorn
+from dotenv import load_dotenv
+
+
+load_dotenv()
 
 # === Конфигурация ===
-TOKEN = "8248066160:AAESuGzlQ9tVe7sWSlMwypU4xYZh1CAZ4Po"
+TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 

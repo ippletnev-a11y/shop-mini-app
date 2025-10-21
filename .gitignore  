@@ -1,5 +1,8 @@
 # Игнорируем всю папку с ботом
-bot/
+.env
+*.env
+.env.local
+.env.production
 
 # Исключения - оставляем только webapp в репозитории
 !webapp/
